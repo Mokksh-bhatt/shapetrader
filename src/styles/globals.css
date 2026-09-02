@@ -1,0 +1,119 @@
+@import 'tailwindcss';
+
+/* ------------------------------------------------------------------ *
+ * ShapeTrader design tokens — dark-mode-first trading terminal look.
+ * One palette, defined once, used everywhere. Bull/bear colours are
+ * never the ONLY signal: pair them with an arrow or a +/- sign.
+ * ------------------------------------------------------------------ */
+@theme {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'Cascadia Code', monospace;
+
+  /* surfaces, darkest to lightest */
+  --color-base: #0a0d12;
+  --color-surface: #11151d;
+  --color-surface-2: #171d28;
+  --color-surface-3: #1f2632;
+
+  /* lines */
+  --color-line: #232b38;
+  --color-line-strong: #313b4d;
+
+  /* text */
+  --color-ink: #e9edf5;
+  --color-ink-muted: #98a2b6;
+  --color-ink-dim: #66708a;
+
+  /* brand + semantic */
+  --color-brand: #4c8dff;
+  --color-brand-dim: #2b62c4;
+  --color-bull: #26a69a;
+  --color-bear: #ef5350;
+  --color-gold: #f5b942;
+  --color-violet: #a78bfa;
+
+  --radius-card: 14px;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--color-base);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overscroll-behavior-y: none;
+  }
+
+  /* Numbers in a trading UI must not jitter as they update. */
+  .tnum,
+  input[type='number'] {
+    font-variant-numeric: tabular-nums;
+    font-family: var(--font-mono);
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-brand) 40%, transparent);
+  }
+
+  *:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Slim dark scrollbars so panels feel like a terminal, not a webpage. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-line-strong) transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: var(--color-line-strong);
+    border-radius: 99px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+@layer utilities {
+  .grain {
+    background-image: radial-gradient(
+      circle at 1px 1px,
+      color-mix(in oklab, var(--color-ink) 6%, transparent) 1px,
+      transparent 0
+    );
+    background-size: 22px 22px;
+  }
+
+  .card-glow {
+    box-shadow:
+      0 1px 0 0 color-mix(in oklab, var(--color-ink) 6%, transparent) inset,
+      0 18px 40px -24px rgb(0 0 0 / 0.9);
+  }
+}
+
+@keyframes st-rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.animate-rise {
+  animation: st-rise 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
