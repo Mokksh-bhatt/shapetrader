@@ -3,6 +3,8 @@
 **Learn to read the market one shape at a time** — from a single candle, to a pattern, to a real
 crash, to your first trade.
 
+**▶ Play it: https://mokksh-bhatt.github.io/shapetrader/**
+
 A browser game that teaches complete beginners two things at once: how to *read* a price chart, and
 how to *use* a trading tool. Everything runs client-side with no backend, no API keys and no network
 calls — open it and it works, including with the network unplugged.
@@ -15,6 +17,9 @@ npm run dev      # http://localhost:5173
 ```
 
 Other scripts: `npm run typecheck`, `npm run test`, `npm run build`, `npm run preview`.
+
+Deploy: `bash scripts/deploy-pages.sh` builds with the project-site base path, verifies the asset
+paths, and publishes to the `gh-pages` branch.
 
 ## The learning path
 

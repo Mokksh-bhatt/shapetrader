@@ -17,10 +17,18 @@ echo "→ typecheck"
 npx tsc --noEmit
 
 echo "→ build (base=/$REPO_NAME/)"
-DEPLOY_BASE="/$REPO_NAME/" npx vite build
+DEPLOY_BASE="$REPO_NAME" npx vite build
 
 # Pages has no SPA rewrite rule. Serving the same document as 404.html means a
 # hard refresh on /simulator still boots the app, which then routes correctly.
+# Fail loudly rather than publishing a bundle whose asset paths are wrong —
+# a broken deploy is much harder to spot than a failed one.
+if ! grep -q "\"/$REPO_NAME/assets/" dist/index.html; then
+  echo "✗ built asset paths are not under /$REPO_NAME/ — refusing to publish" >&2
+  grep -oE '(src|href)="[^"]*"' dist/index.html | head -5 >&2
+  exit 1
+fi
+
 cp dist/index.html dist/404.html
 # Stops Pages running the output through Jekyll, which ignores _-prefixed files.
 touch dist/.nojekyll
@@ -28,6 +36,9 @@ touch dist/.nojekyll
 echo "→ publish $BRANCH"
 rm -rf .deploy
 git worktree remove .deploy --force 2>/dev/null || true
+git worktree prune
+# Left over from an interrupted run — the orphan branch name must be free.
+git branch -D "$BRANCH-tmp" 2>/dev/null || true
 git worktree add --detach .deploy
 cp -r dist/. .deploy/
 cd .deploy
